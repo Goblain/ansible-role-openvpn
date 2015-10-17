@@ -1,0 +1,40 @@
+---
+- apt: name=openvpn
+
+- file: path=/var/log/openvpn state=directory
+
+- copy: src=dh.pem dest=/etc/openvpn/{{label}}-dh.pem
+  when: dh is not defined
+  notify:
+  - openvpn restart
+
+- template: src=config.j2 dest=/etc/openvpn/{{ label }}.conf
+  notify:
+  - openvpn restart
+
+#- copy: dest=/etc/openvpn/{{ label }}.p12 content={{ p12 }}
+#  when: p12 is defined
+#  notify:
+#  - openvpn restart
+
+- copy: dest=/etc/openvpn/{{ label }}.p12 src={{ p12file }}
+  when: p12file is defined
+  notify:
+  - openvpn restart
+
+#
+#- copy: src=files/openvpn-client.p12 dest=/etc/openvpn/{{ item.key }}.p12
+#  when: item.value.mode == 'client'
+#  with_dict: datacenter.vpns
+#  notify:
+#  - restart openvpn
+#
+#- copy: src=files/openvpn-server.p12 dest=/etc/openvpn/{{ item.key }}.p12
+#  when: item.value.mode == 'server'
+#  with_dict: datacenter.vpns
+#  notify:
+#  - restart openvpn
+
+
+
+

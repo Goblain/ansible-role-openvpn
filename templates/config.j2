@@ -1,0 +1,44 @@
+{% if mode == 'client' %}
+client
+remote {% if ip == 'master' %} {{openvpn_master}} {% else %} {{ ip }} {% endif %} {{ port }}
+nobind
+proto tcp-client
+{% endif %}
+
+{% if mode == 'server' %}
+server {{ ip }} {{ netmask }}
+proto tcp
+port {{ port }}
+{% endif %}
+
+dev {{ device }}
+
+dh /etc/openvpn/{{ label }}-dh.pem
+pkcs12 /etc/openvpn/{{ label }}.p12
+
+keepalive 10 60
+comp-lzo
+max-clients 12
+
+user nobody
+group nogroup
+
+persist-tun
+persist-key
+
+verb 3
+
+log-append /var/log/openvpn/{{ label }}.log
+
+{% if route is defined %}
+{% for route in route %}
+route {{ route }}
+{% endfor %}
+{% endif %}
+
+{% if push is defined %}
+{% for push in push %}
+push "{{ push }}"
+{% endfor %}
+{% endif %}
+
