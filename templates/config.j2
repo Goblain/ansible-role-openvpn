@@ -15,6 +15,7 @@ dev {{ device }}
 
 dh /etc/openvpn/{{ label }}-dh.pem
 pkcs12 /etc/openvpn/{{ label }}.p12
+{% if ca is defined %}ca /etc/openvpn/{{ label }}-ca.pem{% endif %}
 
 keepalive 10 60
 comp-lzo
