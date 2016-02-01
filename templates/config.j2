@@ -2,12 +2,12 @@
 client
 remote {% if ip == 'master' %} {{openvpn_master}} {% else %} {{ ip }} {% endif %} {{ port }}
 nobind
-proto tcp-client
+proto {{ protocol }}-client
 {% endif %}
 
 {% if mode == 'server' %}
 server {{ ip }} {{ netmask }}
-proto tcp
+proto {{ protocol }}
 port {{ port }}
 {% endif %}
 
